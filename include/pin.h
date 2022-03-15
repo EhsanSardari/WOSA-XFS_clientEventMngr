@@ -1,3 +1,5 @@
+//FILE:pin.h
+
 #pragma once
 
 #ifndef PIN_H
@@ -9,7 +11,8 @@
 
 static const DWORD dwPinVersionRequired = 0x0101FF03;
 
-class CPin:public CModule{
+class CPin:public CModule
+{
 public:
 	CPin();
 	CPin(const CPin&) = delete;
@@ -41,5 +44,5 @@ public:
 private:
 	HWND m_hwnd;
 };
-#endif
+#endif  //PIN_H
 

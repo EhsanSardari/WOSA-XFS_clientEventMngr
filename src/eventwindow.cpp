@@ -1,27 +1,30 @@
+//FILE: ewentwindow.cpp
+//handling events that modules send.
+
 #include "pch.h"
 #include "..\include\eventwindow.h"
 
-
-
 //Construction
-CEventWindow::CEventWindow() {
-
+CEventWindow::CEventWindow() 
+{
 }
 
-CEventWindow::~CEventWindow() {
+CEventWindow::~CEventWindow() 
+{
 	delete pThread;
 	delete pCPrinter;
 	delete pCSiu;
 	delete pCIdc;
 }
 
-CEventWindow::CEventWindow(const CEventWindow&) {
-
+CEventWindow::CEventWindow(const CEventWindow&) 
+{
 }
 //////////////////////////////////////////////////////////////////////////
 //eventhandle
 
-void CEventWindow::EventHandle() {
+void CEventWindow::EventHandle() 
+{
 	Log("Entered to EventHandle");
 	
 	const wchar_t CLASS_NAME[] = L"CEventWindow";
@@ -115,48 +118,54 @@ LRESULT CALLBACK CEventWindow::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LP
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-void CEventWindow::SetHwnd(HWND hwnd1) {
+void CEventWindow::SetHwnd(HWND hwnd1) 
+{
 	m_hwnd = hwnd1;
 }
 
-HWND CEventWindow::GetHwnd() {
+HWND CEventWindow::GetHwnd() 
+{
 	return m_hwnd;
 }
 
-int CEventWindow::StartThread() {
+int CEventWindow::StartThread() 
+{
 	Log("start of thread");
 	const wchar_t* className = L"CEventWindow";
 
 	thread EventWindowThread(&CEventWindow::EventHandle, CEventWindow());
-	//thread EventWindowThread(&CEventWindow::EventHandle, CEventWindow(), className);
-
 	EventWindowThread.detach();
 	return 0;
 }
 
 
-void CEventWindow::ExecuteEventHandle(LPARAM lParam) {
+void CEventWindow::ExecuteEventHandle(LPARAM lParam) 
+{
 	Log("WFS_EXECUTE_EVENT");
 	ModuleSpecifier(lParam);
 }
 
-void CEventWindow::ServiceEventHandle(LPARAM lParam) {
+void CEventWindow::ServiceEventHandle(LPARAM lParam) 
+{
 	Log("WFS_EXECUTE_EVENT");
 	ModuleSpecifier(lParam);
 }
 
-void CEventWindow::UserEventHandle(LPARAM lParam) {
+void CEventWindow::UserEventHandle(LPARAM lParam) 
+{
 	Log("WFS_USER_EVENT");
 	ModuleSpecifier(lParam);
 
 }
 
-void CEventWindow::ModuleSpecifier(LPARAM lParam) {
+void CEventWindow::ModuleSpecifier(LPARAM lParam) 
+{
 	ModuleNo n = Printer;
 	int nModuleNo = 0;
 	LPWFSRESULT lpWFSResult = (LPWFSRESULT)lParam;
 	nModuleNo = (lpWFSResult->u.dwEventID / 100);
-	switch (nModuleNo) {
+	switch (nModuleNo) 
+	{
 	case(Printer):
 		Log("Printer: ");
 		Log(lpWFSResult->u.dwEventID);
@@ -186,12 +195,14 @@ void CEventWindow::ModuleSpecifier(LPARAM lParam) {
 	}
 }
 
-void CEventWindow::SystemEventHandle(LPARAM lParam) {
+void CEventWindow::SystemEventHandle(LPARAM lParam) 
+{
 	Log("WFS_SYSTEM_EVENT");
 	ModuleSpecifier(lParam);
 	LPWFSRESULT lpWFSResult = (LPWFSRESULT)lParam;
-	//Log("dwEventID SYSTEM_EVENT: ", lpWFSResult->u.dwEventID);
-	switch (lpWFSResult->u.dwEventID) {
+	
+	switch (lpWFSResult->u.dwEventID) 
+	{
 		case(WFS_SYSE_UNDELIVERABLE_MSG):
 			Log("	WFS_SYSE_UNDELIVERABLE_MSG");
 			break;
@@ -222,12 +233,13 @@ void CEventWindow::SystemEventHandle(LPARAM lParam) {
 	}
 }
 
-void CEventWindow::ShowDevStatus(LPWFSRESULT lpWFSResult) {
-	//Log("WFS_SYSE_DEVICE_STATUS");
+void CEventWindow::ShowDevStatus(LPWFSRESULT lpWFSResult) 
+{
 	LPWFSDEVSTATUS lpWFSDEVStatus = (LPWFSDEVSTATUS)(lpWFSResult->lpBuffer);
 	Log("lpszPhysicalName", lpWFSDEVStatus->lpszPhysicalName);
-	//Log("dwState: ", lpWFSDEVStatus->dwState);
-	switch (lpWFSDEVStatus->dwState) {
+	
+	switch (lpWFSDEVStatus->dwState) 
+	{
 		case(WFS_STAT_DEVONLINE):
 			Log("	WFS_STAT_DEVONLINE");
 			break;

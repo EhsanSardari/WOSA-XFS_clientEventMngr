@@ -1,44 +1,55 @@
+//fILE:pin.cpp
+//PIN module functions for openning, register, and ...
+
 #include "pch.h"
 #include "..\include\pin.h"
 
-CPin::CPin() {
+CPin::CPin() 
+{
 
 }
 
-CPin::~CPin() {
+CPin::~CPin() 
+{
 	delete lpWFSVersion;
 	delete lpSrvcVersion;
 	delete lpSPIVersion;
 }
 
-void CPin::GetVersion() {
+void CPin::GetVersion() 
+{
 	lpWFSVersion->wVersion = 0x0003;
 	lpWFSVersion->wLowVersion = 0x0101;
 	lpWFSVersion->wHighVersion = 0x9903;
 }
 
-void CPin::GetSrvcVersion() {
+void CPin::GetSrvcVersion() 
+{
 	lpSrvcVersion->wVersion = 0x0003;
 	lpSrvcVersion->wLowVersion = 0x0003;
 	lpSrvcVersion->wHighVersion = 0x0003;
 }
 
-void CPin::GetSPIVersion() {
+void CPin::GetSPIVersion() 
+{
 	lpSPIVersion->wVersion = 0x0003;
 	lpSPIVersion->wLowVersion = 0x0003;
 	lpSPIVersion->wHighVersion = 0x0003;
 }
 
 
-void CPin::SethService(HSERVICE hservice) {
+void CPin::SethService(HSERVICE hservice) 
+{
 	m_hService = hservice;
 }
 
-HSERVICE CPin::GethService() {
+HSERVICE CPin::GethService() 
+{
 	return m_hService;
 }
 
-bool CPin::OpenModule() {
+bool CPin::OpenModule() 
+{
 	HRESULT hResult;
 	WFSRESULT* lpResult = new WFSRESULT;
 
@@ -53,7 +64,8 @@ bool CPin::OpenModule() {
 	hResult = WFSOpen("PIN", WFS_DEFAULT_HAPP, "XFSTest3.0", 0, WFS_INDEFINITE_WAIT, lpWFSVersion->wVersion, lpSrvcVersion, lpSPIVersion, &(lpResult->hService));
 	SethService(lpResult->hService);
 
-	if (hResult == 0) {
+	if (hResult == 0) 
+	{
 		WFSFreeResult(lpResult);
 		Log("Open PIN Successful");
 		AfxMessageBox(_T("Open PIN Successful"));
@@ -68,13 +80,13 @@ bool CPin::OpenModule() {
 
 }
 
-void CPin::Register() {
+void CPin::Register() 
+{
 	HRESULT hResult;
 	LPWSTR lpClassName = L"CEventWindow";
 
-	//::GetWindowTextW(HWND_MESSAGE, className, 255);
-
-	if (m_hwnd = FindWindowExW(HWND_MESSAGE, NULL, lpClassName, NULL)) {
+	if (m_hwnd = FindWindowExW(HWND_MESSAGE, NULL, lpClassName, NULL)) 
+	{
 		Log("FindWindowHWND for PIN: ", m_hwnd);
 	}
 	else {
@@ -82,7 +94,8 @@ void CPin::Register() {
 	}
 
 	hResult = WFSRegister(GethService(), SYSTEM_EVENTS | USER_EVENTS | EXECUTE_EVENTS | SERVICE_EVENTS, m_hwnd);
-	if (hResult == 0) {
+	if (hResult == 0) 
+	{
 		AfxMessageBox(_T("Register PIN Successful"));
 		Log("Register PIN Successful");
 	}
@@ -92,12 +105,14 @@ void CPin::Register() {
 	}
 }
 
-void CPin::GetInfo(DWORD dwCategory) {
+void CPin::GetInfo(DWORD dwCategory) 
+{
 	HRESULT hresult;
 	WFSRESULT* lpResult = new WFSRESULT;
 
 	hresult = WFSGetInfo(GethService(), dwCategory, NULL, WFS_INDEFINITE_WAIT, &lpResult);
-	if (hresult == 0) {
+	if (hresult == 0) 
+	{
 		AfxMessageBox(_T("GetInfo PTR Successful"));
 		Log("GetInfo PTR Successful");
 	}
@@ -106,7 +121,8 @@ void CPin::GetInfo(DWORD dwCategory) {
 		Log("GetInfo PTR: ", hresult);
 	}
 
-	switch (dwCategory) {
+	switch (dwCategory) 
+	{
 	case (WFS_INF_PIN_STATUS):
 		ShowStatus(lpResult);
 		break;
@@ -129,14 +145,18 @@ void CPin::GetInfo(DWORD dwCategory) {
 	WFSFreeResult(lpResult);
 }
 
-void CPin::Execute(DWORD dwCommand) {
+//This function should be implemented later
+void CPin::Execute(DWORD dwCommand) 
+{
 
 }
 
-void CPin::Close(HSERVICE hService) {
+void CPin::Close(HSERVICE hService) 
+{
 	HRESULT hresult;
 	hresult = WFSClose(hService);
-	if (hresult == 0) {
+	if (hresult == 0) 
+	{
 		Log("Close Successful");
 	}
 	else {
@@ -146,9 +166,11 @@ void CPin::Close(HSERVICE hService) {
 
 
 
-void CPin::ShowStatus(WFSRESULT* lpResult) {
+void CPin::ShowStatus(WFSRESULT* lpResult) 
+{
 	LPWFSPINSTATUS lpWFSPinStatus = (LPWFSPINSTATUS)(lpResult->lpBuffer);
-	switch (lpWFSPinStatus->fwDevice) {
+	switch (lpWFSPinStatus->fwDevice) 
+	{
 	case(WFS_PIN_DEVONLINE):
 		Log("fwDevice: WFS_PIN_DEVONLINE");
 		break;

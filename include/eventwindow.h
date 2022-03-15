@@ -1,3 +1,5 @@
+//FILE: eventwindow.h
+
 #pragma once
 #ifndef EVENTWINDOW_H
 #define EVENTWINDOW_H
@@ -9,7 +11,8 @@
 #include "..\include\idc.h"
 #include "..\include\siu.h"
 
-class CEventWindow :/*public CWinThread,*/public WNDCLASSA {
+class CEventWindow :/*public CWinThread,*/public WNDCLASSA 
+{
 private:
 	HWND m_hwnd;
 	HANDLE m_hStopEvent{ NULL };
@@ -43,7 +46,8 @@ public:
 	static void ModuleSpecifier(LPARAM lParam);
 	static void ShowDevStatus(LPWFSRESULT lpWFSResult);
 
-	/*typedef */enum ModuleNo:int{Printer = 1, IDC, CDM, TTU = 7, SIU , CAM = 10, CIM = 13};
+	enum class ModuleNo:int{Printer = 1, IDC, CDM, TTU = 7, SIU , CAM = 10, CIM = 13};
 };
 
-#endif
+#endif  //EVENTWINDOW_H
+

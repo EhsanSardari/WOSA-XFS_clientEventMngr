@@ -1,49 +1,61 @@
+//FILE:siu.cpp
+//CDM module functions for openning, register, and ...
+
 #include "pch.h"
 #include "..\include\siu.h"
 
-CSiu::CSiu() {
+CSiu::CSiu() 
+{
 
 }
 
-CSiu::~CSiu() {
+CSiu::~CSiu() 
+{
 	delete lpWFSVersion;
 	delete lpSrvcVersion;
 	delete lpSPIVersion;
 }
 
-void CSiu::GetVersion() {
+void CSiu::GetVersion() 
+{
 	lpWFSVersion->wVersion = 0x0003;
 	lpWFSVersion->wLowVersion = 0x0101;
 	lpWFSVersion->wHighVersion = 0x9903;
 }
 
-void CSiu::GetSrvcVersion() {
+void CSiu::GetSrvcVersion() 
+{
 	lpSrvcVersion->wVersion = 0x0003;
 	lpSrvcVersion->wLowVersion = 0x0003;
 	lpSrvcVersion->wHighVersion = 0x0003;
 }
 
-void CSiu::GetSPIVersion() {
+void CSiu::GetSPIVersion() 
+{
 	lpSPIVersion->wVersion = 0x0003;
 	lpSPIVersion->wLowVersion = 0x0003;
 	lpSPIVersion->wHighVersion = 0x0003;
 }
 
 
-void CSiu::SethService(HSERVICE hservice) {
+void CSiu::SethService(HSERVICE hservice) 
+{
 	m_hService = hservice;
 }
 
-HSERVICE CSiu::GethService() {
+HSERVICE CSiu::GethService() 
+{
 	return m_hService;
 }
 
-bool CSiu::OpenModule() {
+bool CSiu::OpenModule() 
+{
 	HRESULT hResult;
 	WFSRESULT* lpResult = new WFSRESULT;
 
 	hResult = WFSStartUp(dwSiuVersionRequired, lpWFSVersion);
-	if (!hResult) {
+	if (!hResult) 
+	{
 		Log("Startup SIU Successful");
 	}
 	else {
@@ -53,7 +65,8 @@ bool CSiu::OpenModule() {
 	hResult = WFSOpen("SIU", WFS_DEFAULT_HAPP, "XFSTest3.0", 0, WFS_INDEFINITE_WAIT, lpWFSVersion->wVersion, lpSrvcVersion, lpSPIVersion, &(lpResult->hService));
 	SethService(lpResult->hService);
 
-	if (hResult == 0) {
+	if (hResult == 0) 
+	{
 		WFSFreeResult(lpResult);
 		Log("Open SIU Successful");
 		AfxMessageBox(_T("Open SIU Successful"));
@@ -68,13 +81,13 @@ bool CSiu::OpenModule() {
 
 }
 
-void CSiu::Register() {
+void CSiu::Register() 
+{
 	HRESULT hResult;
 	LPWSTR lpClassName = L"CEventWindow";
 
-	//::GetWindowTextW(HWND_MESSAGE, className, 255);
-
-	if (m_hwnd = FindWindowExW(HWND_MESSAGE, NULL, lpClassName, NULL)) {
+	if (m_hwnd = FindWindowExW(HWND_MESSAGE, NULL, lpClassName, NULL)) 
+	{
 		Log("FindWindowHWND for SIU: ", m_hwnd);
 	}
 	else {
@@ -82,7 +95,8 @@ void CSiu::Register() {
 	}
 
 	hResult = WFSRegister(GethService(), SYSTEM_EVENTS | USER_EVENTS | EXECUTE_EVENTS | SERVICE_EVENTS, m_hwnd);
-	if (hResult == 0) {
+	if (hResult == 0) 
+	{
 		AfxMessageBox(_T("Register SIU Successful"));
 		Log("Register SIU Successful");
 	}
@@ -92,12 +106,14 @@ void CSiu::Register() {
 	}
 }
 
-void CSiu::GetInfo(DWORD dwCategory) {
+void CSiu::GetInfo(DWORD dwCategory) 
+{
 	HRESULT hresult;
 	WFSRESULT* lpResult = new WFSRESULT;
 
 	hresult = WFSGetInfo(GethService(), dwCategory, NULL, WFS_INDEFINITE_WAIT, &lpResult);
-	if (hresult == 0) {
+	if (hresult == 0) 
+	{
 		AfxMessageBox(_T("GetInfo SIU Successful"));
 		Log("GetInfo SIU Successful");
 	}
@@ -106,7 +122,8 @@ void CSiu::GetInfo(DWORD dwCategory) {
 		Log("GetInfo SIU: ", hresult);
 	}
 
-	switch (dwCategory) {
+	switch (dwCategory) 
+	{
 	case (WFS_INF_SIU_STATUS):
 		ShowStatus(lpResult);
 		ShowSensorsStatus(lpResult);
@@ -118,11 +135,14 @@ void CSiu::GetInfo(DWORD dwCategory) {
 	WFSFreeResult(lpResult);
 }
 
-void CSiu::Execute(DWORD dwCommand) {
+//This function should be implemented later
+void CSiu::Execute(DWORD dwCommand) 
+{
 
 }
 
-void CSiu::Close(HSERVICE hService) {
+void CSiu::Close(HSERVICE hService) 
+{
 	HRESULT hresult;
 	hresult = WFSClose(hService);
 	if (hresult == 0) {
@@ -135,9 +155,11 @@ void CSiu::Close(HSERVICE hService) {
 
 
 
-void CSiu::ShowStatus(WFSRESULT* lpResult) {
+void CSiu::ShowStatus(WFSRESULT* lpResult) 
+{
 	LPWFSSIUSTATUS lpWFSSiuStatus = (LPWFSSIUSTATUS)(lpResult->lpBuffer);
-	switch (lpWFSSiuStatus->fwDevice) {
+	switch (lpWFSSiuStatus->fwDevice) 
+	{
 	case(WFS_SIU_DEVONLINE):
 		Log("fwDevice: WFS_SIU_DEVONLINE");
 		break;
@@ -162,10 +184,12 @@ void CSiu::ShowStatus(WFSRESULT* lpResult) {
 	}
 }
 
-void CSiu::ShowSensorsStatus(WFSRESULT* lpResult) {
+void CSiu::ShowSensorsStatus(WFSRESULT* lpResult) 
+{
 	LPWFSSIUSTATUS lpWFSSiuStatus = (LPWFSSIUSTATUS)(lpResult->lpBuffer);
 
-	switch (lpWFSSiuStatus->fwSensors[WFS_SIU_OPERATORSWITCH]) {
+	switch (lpWFSSiuStatus->fwSensors[WFS_SIU_OPERATORSWITCH]) 
+	{
 	case(WFS_SIU_NOT_AVAILABLE):
 		Log("WFS_SIU_OPERATORSWITCH: WFS_SIU_NOT_AVAILABLE");
 		break;
@@ -179,7 +203,8 @@ void CSiu::ShowSensorsStatus(WFSRESULT* lpResult) {
 		Log("WFS_SIU_OPERATORSWITCH: WFS_SIU_SUPERVISOR");
 		break;
 	}
-	switch (lpWFSSiuStatus->fwSensors[WFS_SIU_TAMPER]) {
+	switch (lpWFSSiuStatus->fwSensors[WFS_SIU_TAMPER]) 
+	{
 	case(WFS_SIU_NOT_AVAILABLE):
 		Log("WFS_SIU_TAMPER: WFS_SIU_NOT_AVAILABLE");
 		break;
@@ -191,7 +216,8 @@ void CSiu::ShowSensorsStatus(WFSRESULT* lpResult) {
 		break;
 	}
 
-	switch (lpWFSSiuStatus->fwSensors[WFS_SIU_PROXIMITY]) {
+	switch (lpWFSSiuStatus->fwSensors[WFS_SIU_PROXIMITY]) 
+	{
 	case(WFS_SIU_NOT_AVAILABLE):
 		Log("WFS_SIU_PROXIMITY: WFS_SIU_NOT_AVAILABLE");
 		break;
@@ -204,10 +230,12 @@ void CSiu::ShowSensorsStatus(WFSRESULT* lpResult) {
 	}
 }
 
-void CSiu::ShowDoorsStatus(WFSRESULT* lpResult) {
+void CSiu::ShowDoorsStatus(WFSRESULT* lpResult) 
+{
 	LPWFSSIUSTATUS lpWFSSiuStatus = (LPWFSSIUSTATUS)(lpResult->lpBuffer);
 
-	switch (lpWFSSiuStatus->fwDoors[WFS_SIU_CABINET]) {
+	switch (lpWFSSiuStatus->fwDoors[WFS_SIU_CABINET]) 
+	{
 	case(WFS_SIU_NOT_AVAILABLE):
 		Log("WFS_SIU_CABINET: WFS_SIU_NOT_AVAILABLE");
 		break;
@@ -225,7 +253,8 @@ void CSiu::ShowDoorsStatus(WFSRESULT* lpResult) {
 		break;
 	}
 
-	switch (lpWFSSiuStatus->fwDoors[WFS_SIU_SAFE]) {
+	switch (lpWFSSiuStatus->fwDoors[WFS_SIU_SAFE]) 
+	{
 	case(WFS_SIU_NOT_AVAILABLE):
 		Log("WFS_SIU_SAFE: WFS_SIU_NOT_AVAILABLE");
 		break;
@@ -243,7 +272,8 @@ void CSiu::ShowDoorsStatus(WFSRESULT* lpResult) {
 		break;
 	}
 
-	switch (lpWFSSiuStatus->fwDoors[WFS_SIU_VANDALSHIELD]) {
+	switch (lpWFSSiuStatus->fwDoors[WFS_SIU_VANDALSHIELD]) 
+	{
 	case(WFS_SIU_NOT_AVAILABLE):
 		Log("WFS_SIU_VANDALSHIELD: WFS_SIU_NOT_AVAILABLE");
 		break;

@@ -1,3 +1,5 @@
+//FILE:printer.h
+
 #pragma once
 
 #ifndef PRINTER_H
@@ -9,7 +11,8 @@
 
 static const DWORD dwPtrVersionRequired = 0x0101FF03;
 
-class CPrinter:public CModule{
+class CPrinter:public CModule
+{
 public:
 	CPrinter();
 	CPrinter(const CPrinter&) = delete;
@@ -41,5 +44,5 @@ public:
 private:
 	HWND m_hwnd;
 };
-#endif
+#endif  //PRINTER_H
 

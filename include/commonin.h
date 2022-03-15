@@ -1,3 +1,5 @@
+//FILE:commonin.h
+
 #pragma once
 
 #ifndef COMMON_H
@@ -7,7 +9,6 @@
 #include <fstream>
 #include <string>
 
-
 #include "..\include\xfsInclude\xfsadmin.h"
 #include "..\include\xfsInclude\xfsapi.h"
 #include "..\include\xfsInclude\xfscdm.h"
@@ -16,6 +17,4 @@
 #include "..\include\xfsInclude\xfsptr.h"
 #include "..\include\xfsInclude\xfsspi.h"
 
-using namespace std;
-
-#endif
+#endif //COMMON_H

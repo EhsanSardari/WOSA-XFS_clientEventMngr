@@ -1,3 +1,5 @@
+//FILE: cdm.h
+
 #pragma once
 
 #ifndef CDM_H
@@ -9,7 +11,8 @@
 
 static const DWORD dwCdmVersionRequired = 0x0101FF03;
 
-class CCdm:public CModule{
+class CCdm:public CModule
+{
 public:
 	CCdm();
 	CCdm(const CCdm&) = delete;
@@ -41,5 +44,5 @@ public:
 private:
 	HWND m_hwnd;
 };
-#endif
+#endif  //CDM_H
 

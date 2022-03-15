@@ -1,3 +1,5 @@
+//FILE:modules.h
+
 #pragma once
 
 #ifndef MODULES_H
@@ -6,7 +8,8 @@
 #include "..\common\include\common.h"
 #include "..\xfsInclude\xfsheaders.h"
 
-class CModule {
+class CModule 
+{
 public:
 	CModule() = default;
 	CModule(const CModule&) = delete;
@@ -29,4 +32,4 @@ public:
 
 };
 
-#endif
+#endif  //MODULES_H

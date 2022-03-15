@@ -1,49 +1,61 @@
+//printer.cpp
+//printer module functions for openning, register, and ...
+
 #include "pch.h"
 #include "..\include\printer.h"
 
-CPrinter::CPrinter() {
+CPrinter::CPrinter() 
+{
 
 }
 
-CPrinter::~CPrinter() {
+CPrinter::~CPrinter() 
+{
 	delete lpWFSVersion;
 	delete lpSrvcVersion;
 	delete lpSPIVersion;
 }
 
-void CPrinter::GetVersion() {
+void CPrinter::GetVersion() 
+{
 	lpWFSVersion->wVersion = 0x0003;
 	lpWFSVersion->wLowVersion = 0x0101;
 	lpWFSVersion->wHighVersion = 0x9903;
 }
 
-void CPrinter::GetSrvcVersion() {
+void CPrinter::GetSrvcVersion() 
+{
 	lpSrvcVersion->wVersion = 0x0003;
 	lpSrvcVersion->wLowVersion = 0x0003;
 	lpSrvcVersion->wHighVersion = 0x0003;
 }
 
-void CPrinter::GetSPIVersion() {
+void CPrinter::GetSPIVersion() 
+{
 	lpSPIVersion->wVersion = 0x0003;
 	lpSPIVersion->wLowVersion = 0x0003;
 	lpSPIVersion->wHighVersion = 0x0003;
 }
 
 
-void CPrinter::SethService(HSERVICE hservice) {
+void CPrinter::SethService(HSERVICE hservice) 
+{
 	m_hService = hservice;
 }
 
-HSERVICE CPrinter::GethService() {
+HSERVICE CPrinter::GethService() 
+{
 	return m_hService;
 }
 
-bool CPrinter::OpenModule() {
+bool CPrinter::OpenModule() 
+{
 	HRESULT hResult;
 	WFSRESULT* lpResult = new WFSRESULT;
 
 	hResult = WFSStartUp(dwPtrVersionRequired, lpWFSVersion);
-	if (!hResult) {
+	if (!hResult) 
+	{
 		Log("Startup PTR Successful");
 	}
 	else {
@@ -53,7 +65,8 @@ bool CPrinter::OpenModule() {
 	hResult = WFSOpen("RPTR", WFS_DEFAULT_HAPP, "XFSTest3.0", 0, WFS_INDEFINITE_WAIT, lpWFSVersion->wVersion, lpSrvcVersion, lpSPIVersion, &(lpResult->hService));
 	SethService(lpResult->hService);
 
-	if (hResult == 0) {
+	if (hResult == 0) 
+	{
 		WFSFreeResult(lpResult);
 		Log("Open PTR Successful");
 		AfxMessageBox(_T("Open PTR Successful"));
@@ -68,13 +81,13 @@ bool CPrinter::OpenModule() {
 
 }
 
-void CPrinter::Register() {
+void CPrinter::Register() 
+{
 	HRESULT hResult;
 	LPWSTR lpClassName = L"CEventWindow";
 
-	//::GetWindowTextW(HWND_MESSAGE, className, 255);
-
-	if (m_hwnd = FindWindowExW(HWND_MESSAGE, NULL, lpClassName, NULL)) {
+	if (m_hwnd = FindWindowExW(HWND_MESSAGE, NULL, lpClassName, NULL)) 
+	{
 		Log("FindWindowHWND for PTR: ", m_hwnd);
 	}
 	else {
@@ -82,7 +95,8 @@ void CPrinter::Register() {
 	}
 
 	hResult = WFSRegister(GethService(), SYSTEM_EVENTS | USER_EVENTS | EXECUTE_EVENTS | SERVICE_EVENTS, m_hwnd);
-	if (hResult == 0) {
+	if (hResult == 0) 
+	{
 		AfxMessageBox(_T("Register PTR Successful"));
 		Log("Register PTR Successful");
 	}
@@ -92,12 +106,14 @@ void CPrinter::Register() {
 	}
 }
 
-void CPrinter::GetInfo(DWORD dwCategory) {
+void CPrinter::GetInfo(DWORD dwCategory) 
+{
 	HRESULT hresult;
 	WFSRESULT* lpResult = new WFSRESULT;
 
 	hresult = WFSGetInfo(GethService(), dwCategory, NULL, WFS_INDEFINITE_WAIT, &lpResult);
-	if (hresult == 0) {
+	if (hresult == 0) 
+	{
 		AfxMessageBox(_T("GetInfo PTR Successful"));
 		Log("GetInfo PTR Successful");
 	}
@@ -106,7 +122,8 @@ void CPrinter::GetInfo(DWORD dwCategory) {
 		Log("GetInfo PTR: ", hresult);
 	}
 
-	switch (dwCategory) {
+	switch (dwCategory) 
+	{
 	case (WFS_INF_PTR_STATUS):
 		ShowStatus(lpResult);
 		break;
@@ -136,10 +153,12 @@ void CPrinter::Execute(DWORD dwCommand) {
 
 }
 
-void CPrinter::Close(HSERVICE hService) {
+void CPrinter::Close(HSERVICE hService) 
+{
 	HRESULT hresult;
 	hresult = WFSClose(hService);
-	if (hresult == 0) {
+	if (hresult == 0) 
+	{
 		Log("Close Successful");
 	}
 	else {
@@ -149,9 +168,11 @@ void CPrinter::Close(HSERVICE hService) {
 
 
 
-void CPrinter::ShowStatus(WFSRESULT* lpResult) {
+void CPrinter::ShowStatus(WFSRESULT* lpResult) 
+{
 	LPWFSPTRSTATUS lpWFSPTRStatus = (LPWFSPTRSTATUS)(lpResult->lpBuffer);
-	switch (lpWFSPTRStatus->fwDevice) {
+	switch (lpWFSPTRStatus->fwDevice) 
+	{
 	case(WFS_PTR_DEVONLINE):
 		Log("fwDevice: WFS_PTR_DEVONLINE");
 		break;
@@ -175,7 +196,8 @@ void CPrinter::ShowStatus(WFSRESULT* lpResult) {
 		break;
 	}
 
-	switch (lpWFSPTRStatus->fwPaper[WFS_PTR_SUPPLYUPPER]) {
+	switch (lpWFSPTRStatus->fwPaper[WFS_PTR_SUPPLYUPPER]) 
+	{
 	case(WFS_PTR_PAPERFULL):
 		Log("WFS_PTR_SUPPLYUPPER: WFS_PTR_PAPERFULL");
 		break;

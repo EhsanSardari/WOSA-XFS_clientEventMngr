@@ -1,3 +1,5 @@
+//FILE:idc.h
+
 #pragma once
 
 #ifndef IDC_H
@@ -9,7 +11,8 @@
 
 static const DWORD dwIdcVersionRequired = 0x0101FF03;
 
-class CIdc:public CModule{
+class CIdc:public CModule
+{
 public:
 	CIdc();
 	CIdc(const CIdc&) = delete;
@@ -41,5 +44,5 @@ public:
 private:
 	HWND m_hwnd;
 };
-#endif
+#endif  //IDC_H
 

@@ -1,44 +1,56 @@
+//FILE:cdm.cpp
+//CDM module functions for openning, register, and ...
+
 #include "pch.h"
 #include "..\include\cdm.h"
 
-CCdm::CCdm() {
+//Constructor
+CCdm::CCdm() 
+{
 
 }
 
-CCdm::~CCdm() {
+CCdm::~CCdm() 
+{
 	delete lpWFSVersion;
 	delete lpSrvcVersion;
 	delete lpSPIVersion;
 }
 
-void CCdm::GetVersion() {
+void CCdm::GetVersion() 
+{
 	lpWFSVersion->wVersion = 0x0003;
 	lpWFSVersion->wLowVersion = 0x0101;
 	lpWFSVersion->wHighVersion = 0x9903;
 }
 
-void CCdm::GetSrvcVersion() {
+void CCdm::GetSrvcVersion() 
+{
 	lpSrvcVersion->wVersion = 0x0003;
 	lpSrvcVersion->wLowVersion = 0x0003;
 	lpSrvcVersion->wHighVersion = 0x0003;
 }
 
-void CCdm::GetSPIVersion() {
+void CCdm::GetSPIVersion() 
+{
 	lpSPIVersion->wVersion = 0x0003;
 	lpSPIVersion->wLowVersion = 0x0003;
 	lpSPIVersion->wHighVersion = 0x0003;
 }
 
 
-void CCdm::SethService(HSERVICE hservice) {
+void CCdm::SethService(HSERVICE hservice) 
+{
 	m_hService = hservice;
 }
 
-HSERVICE CCdm::GethService() {
+HSERVICE CCdm::GethService() 
+{
 	return m_hService;
 }
 
-bool CCdm::OpenModule() {
+bool CCdm::OpenModule() 
+{
 	HRESULT hResult;
 	WFSRESULT* lpResult = new WFSRESULT;
 
@@ -53,7 +65,8 @@ bool CCdm::OpenModule() {
 	hResult = WFSOpen("CDM", WFS_DEFAULT_HAPP, "XFSTest3.0", 0, WFS_INDEFINITE_WAIT, lpWFSVersion->wVersion, lpSrvcVersion, lpSPIVersion, &(lpResult->hService));
 	SethService(lpResult->hService);
 
-	if (hResult == 0) {
+	if (hResult == 0) 
+	{
 		WFSFreeResult(lpResult);
 		Log("Open CDM Successful");
 		AfxMessageBox(_T("Open CDM Successful"));
@@ -68,13 +81,13 @@ bool CCdm::OpenModule() {
 
 }
 
-void CCdm::Register() {
+void CCdm::Register() 
+{
 	HRESULT hResult;
 	LPWSTR lpClassName = L"CEventWindow";
 
-	//::GetWindowTextW(HWND_MESSAGE, className, 255);
-
-	if (m_hwnd = FindWindowExW(HWND_MESSAGE, NULL, lpClassName, NULL)) {
+	if (m_hwnd = FindWindowExW(HWND_MESSAGE, NULL, lpClassName, NULL)) 
+	{
 		Log("FindWindowHWND for CDM: ", m_hwnd);
 	}
 	else {
@@ -82,7 +95,8 @@ void CCdm::Register() {
 	}
 
 	hResult = WFSRegister(GethService(), SYSTEM_EVENTS | USER_EVENTS | EXECUTE_EVENTS | SERVICE_EVENTS, m_hwnd);
-	if (hResult == 0) {
+	if (hResult == 0) 
+	{
 		AfxMessageBox(_T("Register CDM Successful"));
 		Log("Register CDM Successful");
 	}
@@ -92,12 +106,14 @@ void CCdm::Register() {
 	}
 }
 
-void CCdm::GetInfo(DWORD dwCategory) {
+void CCdm::GetInfo(DWORD dwCategory) 
+{
 	HRESULT hresult;
 	WFSRESULT* lpResult = new WFSRESULT;
 
 	hresult = WFSGetInfo(GethService(), dwCategory, NULL, WFS_INDEFINITE_WAIT, &lpResult);
-	if (hresult == 0) {
+	if (hresult == 0) 
+	{
 		AfxMessageBox(_T("GetInfo CDM Successful"));
 		Log("GetInfo CDM Successful");
 	}
@@ -106,7 +122,8 @@ void CCdm::GetInfo(DWORD dwCategory) {
 		Log("GetInfo CDM: ", hresult);
 	}
 
-	switch (dwCategory) {
+	switch (dwCategory) 
+	{
 	case (WFS_INF_CDM_STATUS):
 		ShowStatus(lpResult);
 		break;
@@ -135,14 +152,17 @@ void CCdm::GetInfo(DWORD dwCategory) {
 	WFSFreeResult(lpResult);
 }
 
-void CCdm::Execute(DWORD dwCommand) {
+void CCdm::Execute(DWORD dwCommand) 
+{
 
 }
 
-void CCdm::Close(HSERVICE hService) {
+void CCdm::Close(HSERVICE hService) 
+{
 	HRESULT hresult;
 	hresult = WFSClose(hService);
-	if (hresult == 0) {
+	if (hresult == 0) 
+	{
 		Log("Close Successful");
 	}
 	else {
@@ -151,10 +171,11 @@ void CCdm::Close(HSERVICE hService) {
 }
 
 
-
-void CCdm::ShowStatus(WFSRESULT* lpResult) {
+void CCdm::ShowStatus(WFSRESULT* lpResult) 
+{
 	LPWFSCDMSTATUS lpWFSCdmStatus = (LPWFSCDMSTATUS)(lpResult->lpBuffer);
-	switch (lpWFSCdmStatus->fwDevice) {
+	switch (lpWFSCdmStatus->fwDevice) 
+	{
 	case(WFS_CDM_DEVONLINE):
 		Log("fwDevice: WFS_CDM_DEVONLINE");
 		break;

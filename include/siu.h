@@ -1,3 +1,5 @@
+//FILE:siu.h
+
 #pragma once
 
 #ifndef SIU_H
@@ -6,10 +8,10 @@
 #include "..\common\include\common.h"
 #include "..\include\modules.h"
 
-
 static const DWORD dwSiuVersionRequired = 0x0101FF03;
 
-class CSiu:public CModule{
+class CSiu:public CModule
+{
 public:
 	CSiu();
 	CSiu(const CSiu&) = delete;
@@ -42,5 +44,5 @@ public:
 private:
 	HWND m_hwnd;
 };
-#endif
+#endif  //SIU_H
 
